@@ -275,6 +275,8 @@ button.disabled:hover {
     </select>
 
     <button id="reset">Reset</button>
+
+    <label><input type="checkbox" id="split-uk">Split UK</label>
 </div>
 
 <div id="filters">
@@ -331,55 +333,103 @@ button.disabled:hover {
 'use strict';
 
 var items = [
-    /* España */
-    {id: 'Barcelona', name: 'FC Barcelona', image: 'images/barcelona.png', league: 'spain-first', competitions: ['Champions League']},
-    {id: 'Real Madrid', name: 'Real Madrid', image: 'images/realmadrid.png', league: 'spain-first', competitions: ['Club World Cup','Champions League']},
-    {id: 'Atlético Madrid', name: 'Atlético Madrid', image: 'images/atlmadrid.png', league: 'spain-first', competitions: ['Champions League','Club World Cup']},
-    {id: 'Villarreal', name: 'Villarreal', image: 'images/villarreal.png', league: 'spain-first', competitions: ['Champions League']},
-    {id: 'Betis', name: 'Real Betis', image: 'images/betis.png', league: 'spain-first', competitions: ['Champions League']},
-    {id: 'Athletic', name: 'Athletic Club', image: 'images/athletic.png', league: 'spain-first', competitions: []},
-    {id: 'Valencia', name: 'Valencia', image: 'images/valencia.png', league: 'spain-first', competitions: []},
-    {id: 'Sevilla', name: 'Sevilla', image: 'images/sevilla.png', league: 'spain-first', competitions: []},
-    {id: 'Real Sociedad', name: 'Real Sociedad', image: 'images/realsociedad.png', league: 'spain-first', competitions: ['Europa League']},
-    {id: 'Espanyol', name: 'Espanyol', image: 'images/espanyol.png', league: 'spain-first', competitions: []},
-    {id: 'Depor', name: 'Deportivo A Coruña', image: 'images/deportivocoruna.png', league: 'spain-first', competitions: []},
-    {id: 'Racing', name: 'Racing de Santander', image: 'images/racingsantander.png', league: 'spain-first', competitions: []},
-    {id: 'Malaga', name: 'Málaga', image: 'images/malaga.png', league: 'spain-first', competitions: []},
-    {id: 'Osasuna', name: 'Osasuna', image: 'images/osasuna.png', league: 'spain-first', competitions: []},
-    {id: 'Elche', name: 'Elche', image: 'images/elche.png', league: 'spain-first', competitions: []},
-    {id: 'Getafe', name: 'Getafe', image: 'images/getafe.png', league: 'spain-first', competitions: ['Conference League']},
-    {id: 'Rayo Vallecano', name: 'Rayo Vallecano', image: 'images/rayovallecano.png', league: 'spain-first', competitions: []},
-    {id: 'Levante', name: 'Levante', image: 'images/levante.png', league: 'spain-first', competitions: []},
-    {id: 'Celta', name: 'Celta de Vigo', image: 'images/celta.png', league: 'spain-first', competitions: ['Europa League']},
-    {id: 'Alavés', name: 'Alavés', image: 'images/alaves.png', league: 'spain-first', competitions: []},
-    {id: 'Sporting Gijón', name: 'Sporting de Gijón', image: 'images/sportingg.png', league: 'spain-second', competitions: []},
-    {id: 'Albacete', name: 'Albacete', image: 'images/albacete.png', league: 'spain-second', competitions: []},
-    {id: 'Almería', name: 'UD Almería', image: 'images/almeria.png', league: 'spain-second', competitions: []},
-    {id: 'Andorra', name: 'FC Andorra', image: 'images/andorra.png', league: 'spain-second', competitions: []},
-    {id: 'Burgos', name: 'Burgos CF', image: 'images/burgos.png', league: 'spain-second', competitions: []},
-    {id: 'Cádiz', name: 'Cádiz', image: 'images/cadiz.png', league: 'spain-second', competitions: []},
-    {id: 'Castellón', name: 'CD Castellón', image: 'images/castellon.png', league: 'spain-second', competitions: []},
-    {id: 'Ceuta', name: 'AD Ceuta', image: 'images/ceuta.png', league: 'spain-second', competitions: []},
-    {id: 'Cordoba', name: 'Córdoba CF', image: 'images/cordoba.png', league: 'spain-second', competitions: []},
-    {id: 'Eibar', name: 'Eibar', image: 'images/eibar.png', league: 'spain-second', competitions: []},
-    {id: 'Eldense', name: 'Eldense', image: 'images/eldense.png', league: 'spain-second', competitions: []},
-    {id: 'Girona', name: 'Girona FC', image: 'images/girona.png', league: 'spain-second', competitions: []},
-    {id: 'Granada', name: 'Granada', image: 'images/granada.png', league: 'spain-second', competitions: []},
-    {id: 'Leganés', name: 'Leganés', image: 'images/leganes.png', league: 'spain-second', competitions: []},
-    {id: 'Mallorca', name: 'Mallorca', image: 'images/mallorca.png', league: 'spain-second', competitions: []},
-    {id: 'Real Oviedo', name: 'Real Oviedo', image: 'images/realoviedo.png', league: 'spain-second', competitions: []},
-    {id: 'Sabadell', name: 'CE Sabadell', image: 'images/sabadell.png', league: 'spain-second', competitions: []},
-    {id: 'Tenerife', name: 'Tenerife', image: 'images/tenerife.png', league: 'spain-second', competitions: []},
-    {id: 'Las Palmas', name: 'UD Las Palmas', image: 'images/udlaspalmas.png', league: 'spain-second', competitions: []},
-    {id: 'Valladolid', name: 'Real Valladolid', image: 'images/valladolid.png', league: 'spain-second', competitions: []},
-    {id: 'Real Zaragoza', name: 'Real Zaragoza', image: 'images/zaragoza.png', league:'spain-others', competitions: []},
-    {id: 'Recreativo', name: 'Recreativo de Huelva', image: 'images/recreativo.png', league:'spain-others', competitions: []},
-    {id: 'Sant Andreu', name: 'Sant Andreu', image: 'images/santandreu.png', league:'spain-others', competitions: []},
-    {id: 'Europa', name: 'CE Europa', image: 'images/europa.png', league:'spain-others', competitions: []},
-    {id: 'Logroñés', name: 'UD Logroñés', image: 'images/logroñés.png', league:'spain-others', competitions: []},
-    {id: 'Real Unión', name: 'Real Unión de Irún', image: 'images/irún.png', league:'spain-others', competitions: []},
-    {id: 'Mirandés', name: 'Mirandés', image: 'images/mirandés.png', league:'spain-others', competitions: []},
-    {id: 'Ponferradina', name: 'Ponferradina', image: 'images/ponferradina.png', league:'spain-others', competitions: []}, 
+    // Europe
+    {id: 'Spain', name: 'Spain', image: 'flags/es.png', continent: 'Europe'},
+    {id: 'Portugal', name: 'Portugal', image: 'flags/pt.png', continent: 'Europe'},
+    {id: 'France', name: 'France', image: 'flags/fr.png', continent: 'Europe'},
+    {id: 'Italy', name: 'Italy', image: 'flags/it.png', continent: 'Europe'},
+    {id: 'Germany', name: 'Germany', image: 'flags/de.png', continent: 'Europe'},
+    {id: 'Netherlands', name: 'Netherlands', image: 'flags/nl.png', continent: 'Europe'},
+    {id: 'Belgium', name: 'Belgium', image: 'flags/be.png', continent: 'Europe'},
+    {id: 'UnitedKingdom', name: 'United Kingdom', image: 'flags/gb.png', continent: 'Europe'},
+    {id: 'Ireland', name: 'Ireland', image: 'flags/ie.png', continent: 'Europe'},
+    {id: 'Switzerland', name: 'Switzerland', image: 'flags/ch.png', continent: 'Europe'},
+    {id: 'Austria', name: 'Austria', image: 'flags/at.png', continent: 'Europe'},
+    {id: 'Poland', name: 'Poland', image: 'flags/pl.png', continent: 'Europe'},
+    {id: 'Czechia', name: 'Czechia', image: 'flags/cz.png', continent: 'Europe'},
+    {id: 'Slovakia', name: 'Slovakia', image: 'flags/sk.png', continent: 'Europe'},
+    {id: 'Hungary', name: 'Hungary', image: 'flags/hu.png', continent: 'Europe'},
+    {id: 'Romania', name: 'Romania', image: 'flags/ro.png', continent: 'Europe'},
+    {id: 'Bulgaria', name: 'Bulgaria', image: 'flags/bg.png', continent: 'Europe'},
+    {id: 'Greece', name: 'Greece', image: 'flags/gr.png', continent: 'Europe'},
+    {id: 'Croatia', name: 'Croatia', image: 'flags/hr.png', continent: 'Europe'},
+    {id: 'Serbia', name: 'Serbia', image: 'flags/rs.png', continent: 'Europe'},
+    {id: 'Slovenia', name: 'Slovenia', image: 'flags/si.png', continent: 'Europe'},
+    {id: 'Bosnia', name: 'Bosnia and Herzegovina', image: 'flags/ba.png', continent: 'Europe'},
+    {id: 'Montenegro', name: 'Montenegro', image: 'flags/me.png', continent: 'Europe'},
+    {id: 'Albania', name: 'Albania', image: 'flags/al.png', continent: 'Europe'},
+    {id: 'NorthMacedonia', name: 'North Macedonia', image: 'flags/mk.png', continent: 'Europe'},
+    {id: 'Kosovo', name: 'Kosovo', image: 'flags/xk.png', continent: 'Europe'},
+    {id: 'Ukraine', name: 'Ukraine', image: 'flags/ua.png', continent: 'Europe'},
+    {id: 'Russia', name: 'Russia', image: 'flags/ru.png', continent: 'Europe'},
+    {id: 'Türkiye', name: 'Türkiye', image: 'flags/tr.png', continent: 'Europe'},
+    {id: 'Norway', name: 'Norway', image: 'flags/no.png', continent: 'Europe'},
+    {id: 'Sweden', name: 'Sweden', image: 'flags/se.png', continent: 'Europe'},
+    {id: 'Denmark', name: 'Denmark', image: 'flags/dk.png', continent: 'Europe'},
+    {id: 'Finland', name: 'Finland', image: 'flags/fi.png', continent: 'Europe'},
+    {id: 'Iceland', name: 'Iceland', image: 'flags/is.png', continent: 'Europe'},
+
+    // America
+    {id: 'UnitedStates', name: 'United States', image: 'flags/us.png', continent: 'America'},
+    {id: 'Canada', name: 'Canada', image: 'flags/ca.png', continent: 'America'},
+    {id: 'Mexico', name: 'Mexico', image: 'flags/mx.png', continent: 'America'},
+    {id: 'Brazil', name: 'Brazil', image: 'flags/br.png', continent: 'America'},
+    {id: 'Argentina', name: 'Argentina', image: 'flags/ar.png', continent: 'America'},
+    {id: 'Uruguay', name: 'Uruguay', image: 'flags/uy.png', continent: 'America'},
+    {id: 'Chile', name: 'Chile', image: 'flags/cl.png', continent: 'America'},
+    {id: 'Colombia', name: 'Colombia', image: 'flags/co.png', continent: 'America'},
+    {id: 'Peru', name: 'Peru', image: 'flags/pe.png', continent: 'America'},
+    {id: 'Ecuador', name: 'Ecuador', image: 'flags/ec.png', continent: 'America'},
+    {id: 'Bolivia', name: 'Bolivia', image: 'flags/bo.png', continent: 'America'},
+    {id: 'Paraguay', name: 'Paraguay', image: 'flags/py.png', continent: 'America'},
+    {id: 'Venezuela', name: 'Venezuela', image: 'flags/ve.png', continent: 'America'},
+    {id: 'CostaRica', name: 'Costa Rica', image: 'flags/cr.png', continent: 'America'},
+    {id: 'Panama', name: 'Panama', image: 'flags/pa.png', continent: 'America'},
+    {id: 'Jamaica', name: 'Jamaica', image: 'flags/jm.png', continent: 'America'},
+    {id: 'Cuba', name: 'Cuba', image: 'flags/cu.png', continent: 'America'},
+
+    // Asia
+    {id: 'Japan', name: 'Japan', image: 'flags/jp.png', continent: 'Asia'},
+    {id: 'SouthKorea', name: 'South Korea', image: 'flags/kr.png', continent: 'Asia'},
+    {id: 'China', name: 'China', image: 'flags/cn.png', continent: 'Asia'},
+    {id: 'India', name: 'India', image: 'flags/in.png', continent: 'Asia'},
+    {id: 'Indonesia', name: 'Indonesia', image: 'flags/id.png', continent: 'Asia'},
+    {id: 'Thailand', name: 'Thailand', image: 'flags/th.png', continent: 'Asia'},
+    {id: 'Vietnam', name: 'Vietnam', image: 'flags/vn.png', continent: 'Asia'},
+    {id: 'Philippines', name: 'Philippines', image: 'flags/ph.png', continent: 'Asia'},
+    {id: 'Malaysia', name: 'Malaysia', image: 'flags/my.png', continent: 'Asia'},
+    {id: 'Singapore', name: 'Singapore', image: 'flags/sg.png', continent: 'Asia'},
+    {id: 'SaudiArabia', name: 'Saudi Arabia', image: 'flags/sa.png', continent: 'Asia'},
+    {id: 'Israel', name: 'Israel', image: 'flags/il.png', continent: 'Asia'},
+    {id: 'Iran', name: 'Iran', image: 'flags/ir.png', continent: 'Asia'},
+    {id: 'Iraq', name: 'Iraq', image: 'flags/iq.png', continent: 'Asia'},
+    {id: 'UnitedArabEmirates', name: 'United Arab Emirates', image: 'flags/ae.png', continent: 'Asia'},
+    {id: 'Qatar', name: 'Qatar', image: 'flags/qa.png', continent: 'Asia'},
+    {id: 'Kazakhstan', name: 'Kazakhstan', image: 'flags/kz.png', continent: 'Asia'},
+
+    // Africa
+    {id: 'Morocco', name: 'Morocco', image: 'flags/ma.png', continent: 'Africa'},
+    {id: 'Algeria', name: 'Algeria', image: 'flags/dz.png', continent: 'Africa'},
+    {id: 'Tunisia', name: 'Tunisia', image: 'flags/tn.png', continent: 'Africa'},
+    {id: 'Egypt', name: 'Egypt', image: 'flags/eg.png', continent: 'Africa'},
+    {id: 'Nigeria', name: 'Nigeria', image: 'flags/ng.png', continent: 'Africa'},
+    {id: 'Ghana', name: 'Ghana', image: 'flags/gh.png', continent: 'Africa'},
+    {id: 'Senegal', name: 'Senegal', image: 'flags/sn.png', continent: 'Africa'},
+    {id: 'IvoryCoast', name: 'Ivory Coast', image: 'flags/ci.png', continent: 'Africa'},
+    {id: 'Cameroon', name: 'Cameroon', image: 'flags/cm.png', continent: 'Africa'},
+    {id: 'SouthAfrica', name: 'South Africa', image: 'flags/za.png', continent: 'Africa'},
+    {id: 'Kenya', name: 'Kenya', image: 'flags/ke.png', continent: 'Africa'},
+    {id: 'Ethiopia', name: 'Ethiopia', image: 'flags/et.png', continent: 'Africa'},
+    {id: 'DRC', name: 'DR Congo', image: 'flags/cd.png', continent: 'Africa'},
+    {id: 'Angola', name: 'Angola', image: 'flags/ao.png', continent: 'Africa'},
+    {id: 'Zimbabwe', name: 'Zimbabwe', image: 'flags/zw.png', continent: 'Africa'},
+    {id: 'Tanzania', name: 'Tanzania', image: 'flags/tz.png', continent: 'Africa'},
+
+    // Oceania
+    {id: 'Australia', name: 'Australia', image: 'flags/au.png', continent: 'Oceania'},
+    {id: 'NewZealand', name: 'New Zealand', image: 'flags/nz.png', continent: 'Oceania'},
+    {id: 'Fiji', name: 'Fiji', image: 'flags/fj.png', continent: 'Oceania'},
+    {id: 'PapuaNewGuinea', name: 'Papua New Guinea', image: 'flags/pg.png', continent: 'Oceania'}
 ];
 
 var myPicker = new picker.Picker({
@@ -390,17 +440,40 @@ defaultSettings: {
     minBatchSize: 5,
     maxBatchSize: 5,
     continent: 'all',
+    splitUK: false
+
 },
 
 getFilteredItems: function(settings) {
-    var filtered = items;
+    var filtered = items.slice();
+
+    if (settings.splitUK) {
+        filtered = filtered.filter(function(item) {
+            return item.id !== 'UnitedKingdom';
+        });
+
+        filtered = filtered.concat(ukCountries);
+    }
 
     if (settings.continent && settings.continent !== 'all') {
-    filtered = filtered.filter(function(item) {
-        return leagueContinents[item.league] === settings.continent;
+        filtered = filtered.filter(function(item) {
+            return item.continent === settings.continent;
+        });
+    }
+
+    return filtered.map(function(item) {
+        return item.id;
     });
 },
 });
+
+var ukCountries = [
+    {id: 'England', name: 'England', image: 'flags/eng.png', continent: 'Europe'},
+    {id: 'Scotland', name: 'Scotland', image: 'flags/sco.png', continent: 'Europe'},
+    {id: 'Wales', name: 'Wales', image: 'flags/wal.png', continent: 'Europe'},
+    {id: 'NorthernIreland', name: 'Northern Ireland', image: 'flags/ni.png', continent: 'Europe'}
+];
+
 
 var pickerUI = new PickerUI(myPicker, {
     elements: {
@@ -411,7 +484,7 @@ var pickerUI = new PickerUI(myPicker, {
         evaluating: "#evaluating",
         favorites: "#favorites"
     },
-
+    
 onUpdate: function() {
     var state = this.picker.state.arrays;
     var remaining = state.current.length +
@@ -430,7 +503,9 @@ onUpdate: function() {
 
 pickerUI.initialize();
 var currentSettings = myPicker.getSettings();
-var savedContinent = currentSettings.continent || 'all';
+
+document.getElementById('split-uk').checked =
+    currentSettings.splitUK || false;var savedContinent = currentSettings.continent || 'all';
 
 document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
     radio.checked = radio.value === savedContinent;
@@ -446,7 +521,12 @@ document.getElementById('batch-size').addEventListener('change', function() {
     myPicker.setSettings(settings);
     pickerUI.update(true);
 });
-
+document.getElementById('split-uk').addEventListener('change', function() {
+    var settings = myPicker.getSettings();
+    settings.splitUK = this.checked;
+    myPicker.setSettings(settings);
+    pickerUI.update(true);
+});
 document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
         var settings = myPicker.getSettings();
