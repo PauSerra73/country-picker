@@ -137,25 +137,35 @@ button.disabled:hover {
 
 @media (max-width:636px) {
     .item-list {
-        line-height:75px;
+        line-height:60px;
     }
 
     .item-list li {
-        line-height:75px;
-        height:75px;
-        width:75px;
+        line-height:60px;
+        height:60px;
+        width:90px;
+    }
+
+    .item-list li img {
+        width:90px;
+        height:60px;
     }
 }
 
 @media (max-width:423px) {
     .item-list {
-        line-height:50px;
+        line-height:45px;
     }
 
     .item-list li {
-        line-height:50px;
-        height:50px;
-        width:50px;
+        line-height:45px;
+        height:45px;
+        width:67px;
+    }
+
+    .item-list li img {
+        width:67px;
+        height:45px;
     }
 }
 #filters {
@@ -538,6 +548,13 @@ var items = [
     {id: 'Vanuatu', name: 'Vanuatu', image: 'flags/vu.png', continent: 'Oceania'}
 ];
 
+var ukCountries = [
+    {id: 'England', name: 'England', image: 'flags/eng.png', continent: 'Europe'},
+    {id: 'Scotland', name: 'Scotland', image: 'flags/sco.png', continent: 'Europe'},
+    {id: 'Wales', name: 'Wales', image: 'flags/wal.png', continent: 'Europe'},
+    {id: 'NorthernIreland', name: 'Northern Ireland', image: 'flags/ni.png', continent: 'Europe'}
+];
+
 var myPicker = new picker.Picker({
     items: items,
     localStorageKey: 'country-picker-state',
@@ -572,14 +589,6 @@ getFilteredItems: function(settings) {
     });
 },
 });
-
-var ukCountries = [
-    {id: 'England', name: 'England', image: 'flags/eng.png', continent: 'Europe'},
-    {id: 'Scotland', name: 'Scotland', image: 'flags/sco.png', continent: 'Europe'},
-    {id: 'Wales', name: 'Wales', image: 'flags/wal.png', continent: 'Europe'},
-    {id: 'NorthernIreland', name: 'Northern Ireland', image: 'flags/ni.png', continent: 'Europe'}
-];
-
 
 var pickerUI = new PickerUI(myPicker, {
     elements: {
@@ -661,6 +670,7 @@ document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
 });
 
 document.getElementById('batch-size').value = settings.minBatchSize || 5;
+document.getElementById('split-uk').checked = settings.splitUK || false;
 pickerUI.update(true);
 });
 
@@ -687,8 +697,9 @@ document.getElementById('copy-ranking').addEventListener('click', function() {
     pickerUI.elem.favorites.children().each(function(index) {
         var itemId = pickerUI.getItem(this);
 
-        var item = items.find(function(club) {
-            return club.id === itemId;
+        var item = items.concat(ukCountries).find(function(country) {
+        return country.id === itemId;
+});
         });
         if (item) {
             ranking.push((index + 1) + '. ' + item.name);
@@ -749,11 +760,13 @@ document.getElementById('import-favorites').addEventListener('click', function()
             return id !== '';
         });
 
-    var validFavorites = importedFavorites.filter(function(id) {
-        return items.some(function(item) {
-            return item.id === id;
-        });
+    var allCountries = items.concat(ukCountries);
+
+var validFavorites = importedFavorites.filter(function(id) {
+    return allCountries.some(function(item) {
+        return item.id === id;
     });
+});
 
     if (validFavorites.length !== importedFavorites.length) {
         alert(
