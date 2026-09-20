@@ -120,10 +120,11 @@ button.disabled:hover {
 }
 
 .item-list li img {
+    display:block;
     width: 120px;
     height: 80px;
     object-fit: cover;
-    border-radius: 7px;
+    border-radius: 5px;
 }
 
 .item-list li span {
@@ -296,7 +297,7 @@ button.disabled:hover {
         <label><input type="radio" name="continent" value="Asia">Asia</label>
         <label><input type="radio" name="continent" value="Oceania">Oceania</label>
     </div>
-
+ </div>
 <div id="secondary">
 
     <h2>Found Favorites</h2>
@@ -561,7 +562,7 @@ var ukCountries = [
 
 var allCountries = items.concat(ukCountries);
 var myPicker = new picker.Picker({
-    items: items,
+    items: allCountries,
     localStorageKey: 'country-picker-state',
 
     defaultSettings: {
@@ -571,27 +572,32 @@ var myPicker = new picker.Picker({
         splitUK: false
     },
 
-    getFilteredItems: function(settings) {
-        var filtered = items.slice();
+getFilteredItems: function(settings) {
+    var filtered = allCountries.slice();
 
-        if (settings.splitUK) {
-            filtered = filtered.filter(function(item) {
-                return item.id !== 'UnitedKingdom';
-            });
-
-            filtered = filtered.concat(ukCountries);
-        }
-
-        if (settings.continent && settings.continent !== 'all') {
-            filtered = filtered.filter(function(item) {
-                return item.continent === settings.continent;
-            });
-        }
-
-        return filtered.map(function(item) {
-            return item.id;
+    if (settings.splitUK) {
+        filtered = filtered.filter(function(item) {
+            return item.id !== 'UnitedKingdom';
+        });
+    } else {
+        filtered = filtered.filter(function(item) {
+            return item.id !== 'England' &&
+                   item.id !== 'Scotland' &&
+                   item.id !== 'Wales' &&
+                   item.id !== 'NorthernIreland';
         });
     }
+
+    if (settings.continent && settings.continent !== 'all') {
+        filtered = filtered.filter(function(item) {
+            return item.continent === settings.continent;
+        });
+    }
+
+    return filtered.map(function(item) {
+        return item.id;
+    });
+}
 });
 
 var pickerUI = new PickerUI(myPicker, {
