@@ -336,6 +336,11 @@ button.disabled:hover {
 <script src="picker.js"></script>
 <script src="picker-ui.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="picker.js"></script>
+<script src="picker-ui.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+
 <script>
 'use strict';
 
@@ -425,7 +430,7 @@ var items = [
     {id: 'SaintVincentAndTheGrenadines', name: 'Saint Vincent and the Grenadines', image: 'flags/vc.png', continent: 'America'},
     {id: 'Suriname', name: 'Suriname', image: 'flags/sr.png', continent: 'America'},
     {id: 'TrinidadAndTobago', name: 'Trinidad and Tobago', image: 'flags/tt.png', continent: 'America'},
-    
+
     // Asia
     {id: 'Vietnam', name: 'Vietnam', image: 'flags/vn.png', continent: 'Asia'},
     {id: 'Philippines', name: 'Philippines', image: 'flags/ph.png', continent: 'Asia'},
@@ -488,7 +493,6 @@ var items = [
     {id: 'DRC', name: 'DR Congo', image: 'flags/cd.png', continent: 'Africa'},
     {id: 'Angola', name: 'Angola', image: 'flags/ao.png', continent: 'Africa'},
     {id: 'Zimbabwe', name: 'Zimbabwe', image: 'flags/zw.png', continent: 'Africa'},
-    
     {id: 'Algeria', name: 'Algeria', image: 'flags/dz.png', continent: 'Africa'},
     {id: 'Benin', name: 'Benin', image: 'flags/bj.png', continent: 'Africa'},
     {id: 'Botswana', name: 'Botswana', image: 'flags/bw.png', continent: 'Africa'},
@@ -555,39 +559,39 @@ var ukCountries = [
     {id: 'NorthernIreland', name: 'Northern Ireland', image: 'flags/ni.png', continent: 'Europe'}
 ];
 
+var allCountries = items.concat(ukCountries);
 var myPicker = new picker.Picker({
     items: items,
     localStorageKey: 'country-picker-state',
 
-defaultSettings: {
-    minBatchSize: 5,
-    maxBatchSize: 5,
-    continent: 'all',
-    splitUK: false
+    defaultSettings: {
+        minBatchSize: 5,
+        maxBatchSize: 5,
+        continent: 'all',
+        splitUK: false
+    },
 
-},
+    getFilteredItems: function(settings) {
+        var filtered = items.slice();
 
-getFilteredItems: function(settings) {
-    var filtered = items.slice();
+        if (settings.splitUK) {
+            filtered = filtered.filter(function(item) {
+                return item.id !== 'UnitedKingdom';
+            });
 
-    if (settings.splitUK) {
-        filtered = filtered.filter(function(item) {
-            return item.id !== 'UnitedKingdom';
+            filtered = filtered.concat(ukCountries);
+        }
+
+        if (settings.continent && settings.continent !== 'all') {
+            filtered = filtered.filter(function(item) {
+                return item.continent === settings.continent;
+            });
+        }
+
+        return filtered.map(function(item) {
+            return item.id;
         });
-
-        filtered = filtered.concat(ukCountries);
     }
-
-    if (settings.continent && settings.continent !== 'all') {
-        filtered = filtered.filter(function(item) {
-            return item.continent === settings.continent;
-        });
-    }
-
-    return filtered.map(function(item) {
-        return item.id;
-    });
-},
 });
 
 var pickerUI = new PickerUI(myPicker, {
@@ -599,49 +603,70 @@ var pickerUI = new PickerUI(myPicker, {
         evaluating: "#evaluating",
         favorites: "#favorites"
     },
-    
-onUpdate: function() {
-    var state = this.picker.state.arrays;
-    var remaining = state.current.length +
-                    state.evaluating.length +
-                    state.survived.length - 1;
 
-    if (remaining < 0) {
-        $('#remaining').text('Selection complete!');
-    } else {
-        $('#remaining').text(
-            'Countries remaining to be eliminated before next favorite is found: ' + remaining
-        );
+    onUpdate: function() {
+        var state = this.picker.state.arrays;
+
+        var remaining =
+            state.current.length +
+            state.evaluating.length +
+            state.survived.length - 1;
+
+        if (remaining < 0) {
+            $('#remaining').text('Selection complete!');
+        } else {
+            $('#remaining').text(
+                'Countries remaining to be eliminated before next favorite is found: ' +
+                remaining
+            );
+        }
     }
-}
 });
 
 pickerUI.initialize();
+
 var currentSettings = myPicker.getSettings();
 
 document.getElementById('split-uk').checked =
-    currentSettings.splitUK || false;var savedContinent = currentSettings.continent || 'all';
+    currentSettings.splitUK || false;
+
+var savedContinent =
+    currentSettings.continent || 'all';
 
 document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
     radio.checked = radio.value === savedContinent;
 });
+
 document.getElementById('batch-size').value =
     currentSettings.minBatchSize || 5;
 
+/* Batch size */
+
 document.getElementById('batch-size').addEventListener('change', function() {
-    var size = parseInt(this.value);
+    var size = parseInt(this.value, 10);
+
     var settings = myPicker.getSettings();
+
     settings.minBatchSize = size;
     settings.maxBatchSize = size;
+
     myPicker.setSettings(settings);
     pickerUI.update(true);
 });
+
+/* Split UK */
+
 document.getElementById('split-uk').addEventListener('change', function() {
     var settings = myPicker.getSettings();
+
     settings.splitUK = this.checked;
+
     myPicker.setSettings(settings);
     pickerUI.update(true);
 });
+
+/* Continent filter */
+
 document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
         var settings = myPicker.getSettings();
@@ -649,71 +674,95 @@ document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
         settings.continent = this.value;
 
         myPicker.setSettings(settings);
-
         pickerUI.update(true);
     });
 });
 
+
+/* Reset */
+
 document.getElementById('reset').addEventListener('click', function() {
     var confirmReset = confirm(
-        'Cuidado: perderás el ranking actual y todo el progreso.\n\n¿Estás seguro de que quieres reiniciar?'
+        'Cuidado: perderás el ranking actual y todo el progreso.\n\n' +
+        '¿Estás seguro de que quieres reiniciar?'
     );
+
     if (!confirmReset) {
         return;
     }
 
-myPicker.reset();
-var settings = myPicker.getSettings();
+    myPicker.reset();
+    var settings = myPicker.getSettings();
+    document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
+        radio.checked =
+            radio.value === (settings.continent || 'all');
+    });
 
-document.querySelectorAll('input[name="continent"]').forEach(function(radio) {
-    radio.checked = radio.value === (settings.continent || 'all');
+    document.getElementById('batch-size').value =
+        settings.minBatchSize || 5;
+
+    document.getElementById('split-uk').checked =
+        settings.splitUK || false;
+
+    pickerUI.update(true);
 });
 
-document.getElementById('batch-size').value = settings.minBatchSize || 5;
-document.getElementById('split-uk').checked = settings.splitUK || false;
-pickerUI.update(true);
-});
+/* Sortable favorites */
 
-/* Sortable favorites - you can safely remove this, and the Sortable.min.js script, if you don't want to be able to sort your favorite list. */
-var sortable = new Sortable(pickerUI.elem.favorites.get(0), {
-    draggable: '.item',
-    animation: 100,
-    onStart: function() {
-        pickerUI.elem.favorites.addClass("sorting");
-    },
-    onEnd: function() {
-        pickerUI.elem.favorites.removeClass("sorting");
-    },
-    onUpdate: function() {
-        myPicker.setFavorites(pickerUI.elem.favorites.children().map(function() {
-            return pickerUI.getItem(this);
-        }).get());
-        pickerUI.update(true);
+var sortable = new Sortable(
+    pickerUI.elem.favorites.get(0),
+    {
+        draggable: '.item',
+        animation: 100,
+
+        onStart: function() {
+            pickerUI.elem.favorites.addClass("sorting");
+        },
+
+        onEnd: function() {
+            pickerUI.elem.favorites.removeClass("sorting");
+        },
+
+        onUpdate: function() {
+            myPicker.setFavorites(
+                pickerUI.elem.favorites.children().map(function() {
+                    return pickerUI.getItem(this);
+                }).get()
+            );
+
+            pickerUI.update(true);
+        }
     }
-});
+);
+
+/* Copy ranking */
 document.getElementById('copy-ranking').addEventListener('click', function() {
+
     var ranking = [];
 
     pickerUI.elem.favorites.children().each(function(index) {
         var itemId = pickerUI.getItem(this);
-
-        var item = items.concat(ukCountries).find(function(country) {
-        return country.id === itemId;
-});
+        var item = allCountries.find(function(country) {
+            return country.id === itemId;
         });
+
         if (item) {
-            ranking.push((index + 1) + '. ' + item.name);
+            ranking.push(
+                (index + 1) + '. ' + item.name
+            );
         }
     });
 
-    var text = 'My Countries Favorite Ranking\n\n' + ranking.join('\n');
+    var text =
+        'My Countries Favorite Ranking\n\n' +
+        ranking.join('\n');
 
     navigator.clipboard.writeText(text).then(function() {
         alert('Ranking copied to clipboard!');
     });
+});
 
-/* End sortable favorites */
-
+/* Import / Export */
 document.getElementById('import-export').addEventListener('click', function() {
     document.getElementById('import-export-modal').style.display = 'block';
     document.getElementById('import-export-text').value = '';
@@ -723,20 +772,32 @@ document.getElementById('close-import-export').addEventListener('click', functio
     document.getElementById('import-export-modal').style.display = 'none';
 });
 
-document.getElementById('export-favorites').addEventListener('click', function() {
-    var favorites = [];
 
+/* Export */
+
+document.getElementById('export-favorites').addEventListener('click', function() {
+
+    var favorites = [];
     pickerUI.elem.favorites.children().each(function() {
-        favorites.push(pickerUI.getItem(this));
+        favorites.push(
+            pickerUI.getItem(this)
+        );
     });
 
-    var exportText = 'COUNTRY_FAVORITES_V1\n' + favorites.join('\n');
+    var exportText =
+        'COUNTRY_FAVORITES_V1\n' +
+        favorites.join('\n');
 
-    document.getElementById('import-export-text').value = exportText;
+    document.getElementById('import-export-text').value =
+        exportText;
 });
 
+
+/* Import */
 document.getElementById('import-favorites').addEventListener('click', function() {
-    var text = document.getElementById('import-export-text').value.trim();
+
+    var text =
+        document.getElementById('import-export-text').value.trim();
 
     if (!text) {
         alert('Please paste an exported ranking first.');
@@ -759,13 +820,11 @@ document.getElementById('import-favorites').addEventListener('click', function()
             return id !== '';
         });
 
-    var allCountries = items.concat(ukCountries);
-
-var validFavorites = importedFavorites.filter(function(id) {
-    return allCountries.some(function(item) {
-        return item.id === id;
+    var validFavorites = importedFavorites.filter(function(id) {
+        return allCountries.some(function(item) {
+            return item.id === id;
+        });
     });
-});
 
     if (validFavorites.length !== importedFavorites.length) {
         alert(
@@ -787,10 +846,12 @@ var validFavorites = importedFavorites.filter(function(id) {
     myPicker.setFavorites(validFavorites);
     pickerUI.update(true);
 
-    document.getElementById('import-export-modal').style.display = 'none';
+    document.getElementById('import-export-modal').style.display =
+        'none';
 
     alert('Favorites imported successfully!');
 });
+
 </script>
 </body>
 </html>
