@@ -126,6 +126,21 @@ button.disabled:hover {
     object-fit: cover;
     border-radius: 5px;
 }
+/* Bielorrusia: pegada a la izquierda */
+.item-list li img[src="flags/by.png"] {
+    object-position: left center;
+}
+
+/* Nepal: utilizar toda la altura */
+.item-list li img[src="flags/np.png"] {
+    width: auto !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+.item-list li img[src="flags/ie.png"],
+.item-list li img[src="flags/ng.png"] {
+    object-fit: fill;
+}
 
 .item-list li span {
     display:inline-block;
